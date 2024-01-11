@@ -1,0 +1,51 @@
+inicio de sesion -> home(?) vista:
+			- [datos, algunos del cliente]
+			- [turnos aun por cumplirse] sleccionables para ver detalle
+				->[informacion detallada]y Btn para activar/desactivar recordatorio via whatsapp
+			- boton que lleve al [historial de turnos]
+				->[historial de turnos]
+					->[info detallada del turno y e info que deje el medico]
+			- boton para [pedir un nuevo turno]
+                ->Seleccionar especialidad
+                    ->Seleccionar Profesional {poder seleccionar varios o todos}
+                        ->mostrar [agenda con dias y horas disponibles] seleccionables
+                            ->[pedir turno] opcion de [recordatorio de whatsapp]
+
+
+DB:
+    especialidad:
+        _id
+        nombre 
+        descripcion
+    pacientes:
+        _id 
+        nombre
+        email
+        contraseña 
+
+    Doctores:
+        _id 
+        nombre
+        email
+        contraseña
+        especialidad [id especialidad]
+
+    Turnos:
+        _id 
+        paciente_id [id del esquema de paciente]
+        doctor_id [id del esquema de doctor]
+        especialidad
+        fecha
+        hora
+        estado (pendiente, completado, etc.)
+
+    Horarios no disponibles para Doctores:
+        _id 
+        doctor_id [id esquema doctor]
+        dias_no_disponibles [array (?)]
+
+    Mensajes de Doctores a Pacientes:
+        _id 
+        turno_id [id de turno]
+        mensaje
+        fecha
