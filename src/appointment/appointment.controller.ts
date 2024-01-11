@@ -39,7 +39,7 @@ export class AppointmentController {
     @Delete(':id')
     @UseFilters(MongooseExceptionFilter)
     async deleteAppointment(@Param('id') id: string){
-        const doctor: ModifyResult<Document> = await this.appointmentService.removeAppointment(id)
+        const doctor = await this.appointmentService.removeAppointment(id)
         if(doctor) return doctor
         else throw new HttpException('Appointment Not Found', HttpStatus.NOT_FOUND)
     }

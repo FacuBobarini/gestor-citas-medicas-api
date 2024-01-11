@@ -31,7 +31,7 @@ export class PatientController {
     @Delete(':id')
     @UseFilters(MongooseExceptionFilter)
     async deletePatient(@Param('id') id: string){
-        const patient: ModifyResult<any> = await this.patientService.removePatient(id)
+        const patient= await this.patientService.removePatient(id)
         if(patient) return patient
         else throw new HttpException('Patient Not Found', HttpStatus.NOT_FOUND)
     }

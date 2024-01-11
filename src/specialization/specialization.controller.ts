@@ -31,7 +31,7 @@ export class SpecializationController {
     @Delete(':id')
     @UseFilters(MongooseExceptionFilter)
     async deleteSpecialization(@Param('id') id: string){
-        const specialization: ModifyResult<any> = await this.specializationService.removeSpecialization(id)
+        const specialization= await this.specializationService.removeSpecialization(id)
         if(specialization) return specialization
         else throw new HttpException('Specialization Not Found', HttpStatus.NOT_FOUND)
     }
