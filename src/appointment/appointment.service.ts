@@ -8,8 +8,12 @@ import { Appointment } from './interface/appointment.interface';
 export class AppointmentService {
     constructor (@InjectModel(Appointments.name) private appointmentModel: Model<Appointments>){}
 
-    findAllAppointments(){
-        return  this.appointmentModel.find({ date: { $gte: new Date() } })
+    findAllAppointments(spec: string){
+        let query = {date: { $gte: new Date() }}
+
+        spec&& (query['specialization']=new Types.ObjectId(spec))
+
+        return  this.appointmentModel.find( query )
         .populate('specialization','name')
         .populate('doctor','name last_name')
         .populate('patient','name last_name').exec()
@@ -17,14 +21,6 @@ export class AppointmentService {
 
     findAppointmentById(id: string){
         return  this.appointmentModel.findById(id)
-        .populate('specialization','name')
-        .populate('doctor','name last_name')
-        .populate('patient','name last_name').exec()
-    }
-
-    findAppointmentBySpecialization(spec: string){
-        const specId = new Types.ObjectId(spec)
-        return  this.appointmentModel.find({ specialization:specId, date: { $gte: new Date() } })
         .populate('specialization','name')
         .populate('doctor','name last_name')
         .populate('patient','name last_name').exec()
