@@ -10,23 +10,15 @@ export class AppointmentController {
     constructor (private appointmentService: AppointmentService){}
 
     @Get()
-    async getAllAppointments(){
-       return await this.appointmentService.findAllAppointments()
+    async getAllAppointments(@Query('spec')spec: string){
+       return await this.appointmentService.findAllAppointments(spec)
     }
 
-    @Get('id/:id')
+    @Get(':id')
     @UseFilters(MongooseExceptionFilter)
     async getAppointmentrById(@Param('id') id: string){
         const doctor: Document = await this.appointmentService.findAppointmentById(id)
         if(doctor) return doctor
-        else throw new HttpException('Appointment Not Found', HttpStatus.NOT_FOUND)
-    }
-
-    @Get('query/')
-    @UseFilters(MongooseExceptionFilter, MongoExceptionFilter, ErrorExceptionFilter)
-    async getAppointmentrBySpecialization(@Query('spec')spec: string){
-       const appointment = await this.appointmentService.findAppointmentBySpecialization(spec)
-        if(appointment) return appointment
         else throw new HttpException('Appointment Not Found', HttpStatus.NOT_FOUND)
     }
 
