@@ -9,9 +9,9 @@ export class AppointmentService {
     constructor (@InjectModel(Appointments.name) private appointmentModel: Model<Appointments>){}
 
     findAllAppointments(spec: string){
-        let query = {date: { $gte: new Date() }}
+        let query: { [key: string]: any } = {date: { $gte: new Date() }}
 
-        spec&& (query['specialization']=new Types.ObjectId(spec))
+        spec&& (query.specialization = new Types.ObjectId(spec))
 
         return  this.appointmentModel.find( query )
         .populate('specialization','name')
