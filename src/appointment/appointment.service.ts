@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { ObjectId, Model, Types, Date } from 'mongoose';
 import { Appointments } from 'src/schema/appointment.schema';
 import { Appointment } from './interface/appointment.interface';
 
@@ -9,11 +9,12 @@ export class AppointmentService {
     constructor (@InjectModel(Appointments.name) private appointmentModel: Model<Appointments>){}
 
     findAllAppointments(spec: string){
-        let query: { [key: string]: any } = {date: { $gte: new Date() }}
+        
+       let query= {date: { $gte: (new Date()).toISOString().split('T')[0] }}
+        
+        if(spec){ query["specialization"] = new Types.ObjectId(spec)}
 
-        spec&& (query.specialization = new Types.ObjectId(spec))
-
-        return  this.appointmentModel.find( query )
+        return  this.appointmentModel.find(query)
         .populate('specialization','name')
         .populate('doctor','name last_name')
         .populate('patient','name last_name').exec()
