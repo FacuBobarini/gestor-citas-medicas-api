@@ -1,5 +1,5 @@
-import { IsEnum, IsMongoId, IsNotEmpty, IsString } from "class-validator";
-import { Appointment, appointmentStatus, appointmentTime } from "../interface/appointment.interface";
+import { IsMongoId, IsNotEmpty, IsString } from "class-validator";
+import { Appointment } from "../interface/appointment.interface";
 
 export class CreateAppointmentDTO implements Appointment{
     @IsString()
@@ -7,7 +7,6 @@ export class CreateAppointmentDTO implements Appointment{
     date: string;
     @IsString()
     @IsNotEmpty()
-    @IsEnum(appointmentTime)
     time: string;
     @IsString()
     @IsNotEmpty()
