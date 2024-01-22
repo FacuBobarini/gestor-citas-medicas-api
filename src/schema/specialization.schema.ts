@@ -7,16 +7,26 @@ export class Specializations{
     @Prop({
         unique: true,
         required: true,
-        trim: true,
         toUpperCase: true
     })
     name: string;
 
     @Prop({
         required: true,
-        trim: true
     })
     description: string;
+
+    @Prop({
+        required: true,
+        type: Number, 
+        min: 0,
+        validate: {
+          validator: Number.isInteger, 
+          message: 'appointmentTime isnt integer',
+        },
+    })
+    appointmentTime: number;
+    
 }
 
 export const SpecializationSchema =  SchemaFactory.createForClass(Specializations)
