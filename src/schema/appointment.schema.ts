@@ -12,14 +12,12 @@ export class Appointments {
 
     @Prop({
         required: true,
-        trim: true,
         type: MongooseSchema.Types.Date
     })
     date: string;
 
     @Prop({
         required: true,
-        trim: true
     })
     time: string;
 
@@ -30,7 +28,6 @@ export class Appointments {
 
     @Prop({
         required: true,
-        trim: true,
         type: MongooseSchema.Types.ObjectId,
         ref: 'Specializations',        
     })
@@ -38,7 +35,6 @@ export class Appointments {
     
     @Prop({
         required: true,
-        trim: true,
         type: MongooseSchema.Types.ObjectId,
         ref: 'Doctors',        
     })
@@ -46,7 +42,6 @@ export class Appointments {
     
     @Prop({
         required: true,
-        trim: true,
         type: MongooseSchema.Types.ObjectId,
         ref: 'Patients',     
     })
@@ -63,21 +58,36 @@ AppointmentsSchema.pre("save",async function(next){
         time: this.time,
         doctor: this.doctor,
     })
-
     if (existingAppointment) {
         const err = new HttpException('Appointment already exists', HttpStatus.CONFLICT);
-        return next(err);}
+        return next(err);
+    }
+
+    const doctorInfo:any = await this.model(Doctors.name).findById(this.doctor)
+    if(!doctorInfo){
+        const err:HttpException = new HttpException('Doctor not found', HttpStatus.NOT_FOUND)
+        next(err)        
+    }
+
+    const appointmentTime = doctorInfo.workSchedule.find((time: string) => time === this.time)
+    if(!appointmentTime){
+        const err = new HttpException('Appointment doesn exist in doctor schedule', HttpStatus.NOT_FOUND);
+        return next(err);
+    }
 
 
-    if(await this.model(Specializations.name).findById(this.specialization) 
-    && await this.model(Doctors.name).findById(this.doctor) 
-    && await this.model(Patients.name).findById(this.patient)){ 
-    next()}
+    if(!await this.model(Specializations.name).findById(this.specialization)){ 
+        const err:HttpException = new HttpException('Specialization not found', HttpStatus.NOT_FOUND)
+        next(err)
+    }
 
-    const err:HttpException = new HttpException('One or more properties are incorrect: Specialization, Doctor, Patient', HttpStatus.NOT_FOUND)
 
-    next(err)
-    
+    if(!await this.model(Patients.name).findById(this.patient)){
+        const err:HttpException = new HttpException('Patient not found', HttpStatus.NOT_FOUND)
+        next(err)
+    }
+
+    next() 
  });
 
  export {AppointmentsSchema}
