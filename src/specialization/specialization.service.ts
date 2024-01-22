@@ -16,7 +16,7 @@ export class SpecializationService {
         return this.specializationModel.findById(id)
     }
 
-    addNewSpecialization(specialization: Specialization){
+    addNewSpecialization(specialization: any){
         return new this.specializationModel(specialization).save()
     }
 

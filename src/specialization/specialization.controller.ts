@@ -24,7 +24,7 @@ export class SpecializationController {
 
     @Post()
     @UseFilters(MongoExceptionFilter)
-    async createSpecialization(@Body()body:CreateSpecializationDTO){
+    async createSpecialization(@Body()body:any){
         return await this.specializationService.addNewSpecialization(body)
     }
 
