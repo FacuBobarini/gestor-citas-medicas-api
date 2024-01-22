@@ -16,7 +16,9 @@ export class DoctorService {
         return  this.doctorModel.findById(id).populate('specialization','name description').exec()
     }
 
-    addNewDoctor(doctor: Doctor){
+    addNewDoctor(doctor: any){
+        const newDoctor= doctor
+
         return new this.doctorModel(doctor).save()
     }
 

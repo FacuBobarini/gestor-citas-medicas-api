@@ -24,7 +24,7 @@ export class DoctorController {
 
     @Post()
     @UseFilters(ErrorExceptionFilter, MongoExceptionFilter)
-    createDoctor(@Body()body:CreateDoctorDTO){
+    createDoctor(@Body()body:any){
         return this.doctorService.addNewDoctor(body)
     }
 
