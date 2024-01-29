@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Schema as MongooseSchema, ObjectId, Types, UpdateQuery } from "mongoose";
 import { Specializations } from "./specialization.schema";
 import { HttpException, HttpStatus } from "@nestjs/common";
-import { format, addMinutes  } from "date-fns";
+import * as moment from 'moment';
 
 
 @Schema({
@@ -71,10 +71,11 @@ export class Doctors {
 
             const schedule: string[] = [];
 
-            let actualAppointment = new Date(`2000-01-01T${this.startTime}:00`);
-            while (actualAppointment < new Date(`2000-01-01T${this.endTime}:00`)) {
-                schedule.push(format(actualAppointment, 'HH:mm'));
-                actualAppointment = addMinutes(actualAppointment, specializationInfo.appointmentTime);
+            let actualAppointment = moment(`2000-01-01T${this.startTime}:00`);
+            const endTimeSchedule = moment(`2000-01-01T${this.endTime}:00`)
+            while (actualAppointment < endTimeSchedule) {
+                schedule.push(actualAppointment.format('HH:mm'));
+                actualAppointment.add(specializationInfo.appointmentTime,'minutes');
              }
 
              return schedule;
