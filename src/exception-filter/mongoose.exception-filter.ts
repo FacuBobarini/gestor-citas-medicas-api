@@ -7,7 +7,6 @@ import { Error, MongooseError } from 'mongoose';
 @Catch(MongoError)
 export class MongoExceptionFilter implements ExceptionFilter {
   catch(exception: MongoError, host: ArgumentsHost) {
-    console.log(exception)
     switch (exception.code) {
       case 11000:
         const ctx: HttpArgumentsHost = host.switchToHttp();
