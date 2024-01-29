@@ -3,14 +3,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Appointments } from 'src/schema/appointment.schema';
 import { Appointment } from './interface/appointment.interface';
-import { parse } from 'date-fns';
+import * as moment from 'moment';
 
 @Injectable()
 export class AppointmentService {
     constructor (@InjectModel(Appointments.name) private appointmentModel: Model<Appointments>){}
 
     findAllAppointments(spec: string){
-         let query= {date: { $gte: (new Date()).toISOString().split('T')[0] }}
+         let query= {date: { $gte: moment().format('YYYY-MM-DD') }}
         
         if(spec){ query["specialization"] = new Types.ObjectId(spec)}
 
