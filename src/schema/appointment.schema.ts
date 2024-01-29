@@ -4,6 +4,8 @@ import { Specializations } from "./specialization.schema";
 import { Doctors } from "./doctor.schema";
 import { Patients } from "./patient.schema";
 import { HttpException, HttpStatus } from "@nestjs/common";
+import * as moment from 'moment';
+import 'moment-timezone'
 
 @Schema({
     timestamps: true
@@ -17,6 +19,12 @@ export class Appointments {
     date: string;
 
     @Prop({
+        type: MongooseSchema.Types.Date,
+        default : ""
+    })
+    dateTime: string;
+
+    @Prop({
         required: true,
     })
     time: string;
@@ -27,7 +35,6 @@ export class Appointments {
     status: string;
 
     @Prop({
-        required: true,
         type: MongooseSchema.Types.ObjectId,
         ref: 'Specializations',        
     })
@@ -53,9 +60,12 @@ const AppointmentsSchema =  SchemaFactory.createForClass(Appointments)
 
 AppointmentsSchema.pre("save",async function(next){
 
+    const date = moment(this.date, 'YYYY-MM-DD').toISOString()
+
+    this.dateTime = moment.utc(`${date} ${this.time}`,'YYYY-MM-DD HH:mm').toString()
+   
     const existingAppointment = await this.model(Appointments.name).findOne({
-        date: new Date(this.date),
-        time: this.time,
+        dateTime: this.dateTime,
         doctor: this.doctor,
     })
     if (existingAppointment) {
@@ -66,8 +76,10 @@ AppointmentsSchema.pre("save",async function(next){
     const doctorInfo:any = await this.model(Doctors.name).findById(this.doctor)
     if(!doctorInfo){
         const err:HttpException = new HttpException('Doctor not found', HttpStatus.NOT_FOUND)
-        next(err)        
+        return next(err)        
     }
+
+    this.specialization = doctorInfo.specialization
 
     const appointmentTime = doctorInfo.workSchedule.find((time: string) => time === this.time)
     if(!appointmentTime){
@@ -76,15 +88,9 @@ AppointmentsSchema.pre("save",async function(next){
     }
 
 
-    if(!await this.model(Specializations.name).findById(this.specialization)){ 
-        const err:HttpException = new HttpException('Specialization not found', HttpStatus.NOT_FOUND)
-        next(err)
-    }
-
-
     if(!await this.model(Patients.name).findById(this.patient)){
         const err:HttpException = new HttpException('Patient not found', HttpStatus.NOT_FOUND)
-        next(err)
+        return next(err)
     }
 
     next() 
