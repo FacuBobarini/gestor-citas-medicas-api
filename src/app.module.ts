@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { SpecializationModule } from './specialization/specialization.module';
 import { PatientModule } from './patient/patient.module';
 import { AppointmentModule } from './appointment/appointment.module';
+import { DaysoffModule } from './daysoff/daysoff.module';
 
 @Module({
   imports: [ConfigModule.forRoot({
@@ -15,7 +16,8 @@ import { AppointmentModule } from './appointment/appointment.module';
   DoctorModule,
   SpecializationModule,
   PatientModule,
-  AppointmentModule],
+  AppointmentModule,
+  DaysoffModule],
   controllers: [],
   providers: [],
 })
