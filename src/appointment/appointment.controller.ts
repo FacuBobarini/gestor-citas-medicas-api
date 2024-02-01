@@ -14,7 +14,7 @@ export class AppointmentController {
         @Query('spec')spec: string,
         @Query('doctor') doctor: string,
         @Query('getall') getAll: string, 
-        @Query('getall') patient: string){
+        @Query('patient') patient: string){
        return await this.appointmentService.findAllAppointments(spec ,doctor,getAll,patient)
     }
 
