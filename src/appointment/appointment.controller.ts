@@ -10,8 +10,12 @@ export class AppointmentController {
     constructor (private appointmentService: AppointmentService){}
 
     @Get()
-    async getAllAppointments(@Query('spec')spec: string){
-       return await this.appointmentService.findAllAppointments(spec)
+    async getAllAppointments(
+        @Query('spec')spec: string,
+        @Query('doctor') doctor: string,
+        @Query('getall') getAll: string, 
+        @Query('getall') patient: string){
+       return await this.appointmentService.findAllAppointments(spec ,doctor,getAll,patient)
     }
 
     @Get(':id')
