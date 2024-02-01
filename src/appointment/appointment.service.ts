@@ -9,11 +9,17 @@ import * as moment from 'moment';
 export class AppointmentService {
     constructor (@InjectModel(Appointments.name) private appointmentModel: Model<Appointments>){}
 
-    findAllAppointments(spec: string){
-         let query= {date: { $gte: moment().format('YYYY-MM-DD') }}
+    findAllAppointments(spec: string, doctor: string, getAll: string, patient: string){
+        let query= {date: { $gte: moment().format('YYYY-MM-DD') }}
         
         if(spec){ query["specialization"] = new Types.ObjectId(spec)}
 
+        if(doctor){ query["doctor"] = new Types.ObjectId(doctor)}
+
+        if(patient){ query["patient"] = new Types.ObjectId(patient)}
+
+        if(getAll === "true"){ delete query.date}
+        
         return  this.appointmentModel.find(query)
         .populate('specialization','name')
         .populate('doctor','name last_name')
