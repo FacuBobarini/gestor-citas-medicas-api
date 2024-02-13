@@ -13,12 +13,14 @@ export class DaysoffService {
         if(doctor){ query["doctor"] = new Types.ObjectId(doctor)}
 
         return  this.dayOffmentModel.find()
-        .populate('doctor','name last_name').exec()
+        .populate('doctor','-_id name last_name')
+        .select('-_id -createdAt -updatedAt -__v' ).exec()
     }
 
     findDayOffById(id: string){
         return  this.dayOffmentModel.findById(id)
-        .populate('doctor','name last_name').exec()
+        .populate('doctor','-_id name last_name')
+        .select('-_id -createdAt -updatedAt -__v' ).exec()
     }
 
     addNewDaysOff(daysOff: any){
