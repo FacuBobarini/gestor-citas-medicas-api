@@ -10,10 +10,12 @@ export class SpecializationService {
 
     findAllSpecialization(){
     return this.specializationModel.find()
+    .select('-_id -createdAt -updatedAt -__v' ).exec()
     }
 
     findSpecializationById(id:string){
         return this.specializationModel.findById(id)
+        .select('-_id -createdAt -updatedAt -__v' ).exec()
     }
 
     addNewSpecialization(specialization: any){
