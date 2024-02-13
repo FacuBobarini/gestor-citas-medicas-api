@@ -12,7 +12,7 @@ export class AppointmentService {
     findAllAppointments(spec: string, doctor: string, getAll: string, patient: string){
         let query= {date: { $gte: moment().format('YYYY-MM-DD') }}
         
-        if(spec){ query["specialization"] = new Types.ObjectId(spec)}
+        if(spec) query["specialization"] = new Types.ObjectId(spec)
 
         if(doctor){ query["doctor"] = new Types.ObjectId(doctor)}
 
@@ -21,16 +21,18 @@ export class AppointmentService {
         if(getAll === "true"){ delete query.date}
         
         return  this.appointmentModel.find(query)
-        .populate('specialization','name')
-        .populate('doctor','name last_name')
-        .populate('patient','name last_name').exec()
+        .populate('specialization','-_id name')
+        .populate('doctor','-_id name last_name')
+        .populate('patient','-_id name last_name')
+        .select('-_id -createdAt -updatedAt -__v' ).exec()
     }
 
     findAppointmentById(id: string){
         return  this.appointmentModel.findById(id)
-        .populate('specialization','name')
-        .populate('doctor','name last_name')
-        .populate('patient','name last_name').exec()
+        .populate('specialization','-_id name')
+        .populate('doctor','-_id name last_name')
+        .populate('patient','-_id name last_name')
+        .select('-_id -createdAt -updatedAt -__v' ).exec()
     }
 
     addNewAppointment(appointment: any){
