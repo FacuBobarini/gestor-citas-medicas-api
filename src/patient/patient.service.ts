@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Patients } from 'src/schema/patient.schema';
 import { Patient, UpdatePatient } from './interface/patient.interface';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class PatientService {
@@ -10,13 +11,20 @@ export class PatientService {
 
     findAllPatients(){
         return  this.patientModel.find()
+        .select('-_id -createdAt -updatedAt -__v' ).exec()
     }
 
     findPatientById(id: string){
         return  this.patientModel.findById(id)
+        .select('-_id -createdAt -updatedAt -__v' ).exec()
     }
 
     addNewPatient(patient: Patient){
+        const {password}= patient
+
+        const hash:string = bcrypt.hashSync(password, (bcrypt.genSaltSync(10)));
+
+        patient.password = hash
         return new this.patientModel(patient).save()
     }
 
